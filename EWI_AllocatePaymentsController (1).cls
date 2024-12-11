@@ -1,6 +1,6 @@
 public without Sharing class  EWI_AllocatePaymentsController {
     public static Id CaseRecordTypeId = Schema.SObjectType.Case.getRecordTypeInfosByName().get('Dispute EW Insured').getRecordTypeId();
-    
+    // addition of code
     @AuraEnabled
     public static Boolean isPermissionSet(){
         Id currentUser = userinfo.getUserId();
