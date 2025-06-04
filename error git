@@ -1,2 +1,5 @@
 Filename too long
 warning: Clone succeeded, but checkout failed.
+
+
+git config --system core.longpaths true
