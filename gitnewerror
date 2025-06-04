@@ -1,1 +1,4 @@
 fatal: bad boolean config value 'fals' for 'core.symlinks'
+
+$ git config --global core.symlinks true
+ 
