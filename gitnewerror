@@ -3,3 +3,5 @@ fatal: bad boolean config value 'fals' for 'core.symlinks'
 $ git config --global core.symlinks true
  
 git config --global core.longpaths true
+
+ApexTestClassesNameStart:-[BYPASS_TESTS]-:ApexTestClassesNameEnd
