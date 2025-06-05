@@ -1,0 +1,6 @@
+//sessionStorage.setItem('accessCode', accessCode);
+            // Remove accessCode from the URL
+            urlParams.delete('accessCode');
+             const newUrl = window.location.pathname + (urlParams.toString() ? '?' + urlParams.toString() : '');
+            window.history.replaceState({}, '', newUrl);
+            this.accessCode = sessionStorage.getItem('accessCode');
