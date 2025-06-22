@@ -1,0 +1,472 @@
+<apex:page standardStylesheets="false" renderAs="pdf"  applyBodyTag="false" applyHtmlTag="false" showHeader="false">
+   <html>
+      <head>
+         <meta charset="utf-8" />
+         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+         <title>TDS</title>
+         <style>
+            @page {
+            size: A4;
+            @top-right {
+            content: counter(page);
+            font-size: 14px;
+            color: #000;
+            font-weight:bold;
+            font-family: Arial, sans-serif;
+            padding-right:10px
+            }
+            }
+            *{
+            padding:0;
+            margin:0 
+            }
+            body {
+            font-family: Arial, sans-serif;
+            padding:0;
+            margin:0;
+            font-size:12px;
+            line-height:18px 
+            }
+            a{
+            color:#000;
+            text-decoration:none 
+            }
+            h3{
+            font-size:18px 
+            }
+            td,th{
+            word-wrap: break-word;
+            }
+            table tr, table td{
+            page-break-inside: avoid;
+            }
+            table{
+            -fs-table-paginate: paginate;
+            border-collapse: collapse;
+            border-spacing: 0;
+            border:none;
+            width:100% 
+            }
+            .pdf-page{
+            page-break-before: always;
+            }
+            .pdf-page:first-child {
+            page-break-before: auto;
+            }
+            .header td{
+            width:50%;
+            font-size:11.5px;
+            line-height:16px;
+            }
+            .header td h2{
+            font-size:11.5px;
+            margin-bottom:3px 
+            }
+            .header ul{
+            list-style:none;
+            margin:0 
+            }
+            .header ul li{
+            margin-top:1px;
+            font-size:11.5px 
+            }
+            .header ul li span{
+            display:inline-block;
+            vertical-align:middle;
+            padding-top:5px 
+            }
+            .pres-content{
+            padding-bottom:8px;
+            margin-top:30px;
+            margin-bottom:20px 
+            }
+            .pres-content h3{
+            margin-bottom:10px 
+            }
+            .info-content td{
+            padding-bottom:8px 
+            }
+            .info-content h3{
+            margin-bottom:10px 
+            }
+            .info-left{
+            width:3% 
+            }
+            .info-box{
+            margin-top:20px 
+            }
+            .info-box img{
+            width:100%;
+            }
+            .input-col{
+            padding:2px 0 0 0;
+            border:1px solid #000;
+            width:100%;
+            min-height:18px;
+            background:#f3f6fe;
+            font-size:12px;
+            line-height:15px;
+            margin-bottom:3px;
+            }
+            .input-col span{
+            padding:0 5px;
+            display:block
+            }
+            .form-sec{
+            background:#f1f1f1;
+            }
+            .form-sec h3 img{
+            width: 100%;
+            }
+            .form-sec p{
+            line-height:18px 
+            }
+            .form-sec .left-col{
+            padding-right:15px 
+            }
+            .form-sec .right-col{
+            padding-left:15px 
+            }
+            .form-sec-details{
+            background:#f1f1f1;
+            padding:10px 15px 12px 
+            }
+            .form-box td{
+            text-align:left;
+            width:50%;
+            line-height:18px protectedAmount
+            }
+            .form-box .middle-col{
+            width:4% 
+            }
+            .form-three-col td{
+            width:33.33%;
+            vertical-align:top
+            }
+            .form-three-col .first-col{
+            padding-right:10px 
+            }
+            .form-three-col .second-col{
+            padding-left:10px 
+            }
+            .form-three-col .third-col{
+            padding-left:20px 
+            }
+            .form-three-col td{
+            padding-bottom:4px 
+            }
+            .form-box label{
+            margin-bottom:4px;
+            display:block 
+            }
+            .form-box .form-row{
+            padding-bottom:4px 
+            }
+            .gray-border-none{
+            border-bottom:none 
+            }
+            .pdf-page-2 h3{
+            font-size:14px 
+            }
+            .page-5-top-row p{
+            font-size:13px
+            }
+            .page-5-top-row h3{
+            margin-bottom:15px;
+            font-size:14px
+            }
+            .confirmation-sec{
+            margin-top:15px
+            }
+            .confirmation-sec h3{
+            margin-bottom:15px
+            }
+            .confirmation-btm-row{
+            margin-top:120px;
+            border-top:1px solid #000;
+            padding-top:5px
+            }
+            .confirmation-btm-row p{
+            line-height:18px;
+            margin-bottom:15px;
+            font-size:12.5px
+            }
+            .text-area.input-col{
+            width:99.6%;
+            min-height:150px;
+            margin:5px 0 8px 0;
+            }
+         </style>
+      </head>
+      <body>
+         <div class="pdf-page pdf-page-1">
+            <table class="header">
+               <tr>
+                  <td valign="top"> <img src="{!URLFOR($Resource.PI_Template, 'img/tds-sds-logo.png')}" alt="" style="width:280px; height: auto;" /></td>
+                  <td valign="top" >
+                     <div style="float:right">
+                        <p>The scheme administrator is:</p>
+                        <h2>SAFE DEPOSITS SCOTLAND</h2>
+                        <p>221 West George Street, Glasgow, G2 2ND</p>
+                        <ul>
+                           <li><span><img src="{!URLFOR($Resource.PI_Template, 'img/tds-phone-icons.png')}" alt="" style="width: 16px; height: auto;" /></span> 03333 213 136</li>
+                           <li><span><img src="{!URLFOR($Resource.PI_Template, 'img/tds-mail-icon.png')}" alt="" style="width: 16px; height: auto;" /></span> <a href="mailto:info@safedepositsscotland.com">info@safedepositsscotland.com</a></li>
+                           <li><span><img src="{!URLFOR($Resource.PI_Template, 'img/tds-globe-icon.png')}" alt="" style="width: 16px; height: auto;" /></span> <a href="https://linkprotect.cudasvc.com/url?a=https%3a%2f%2fwww.safedepositsscotland.com%2f&c=E,1,BiwhRdvNl9DpfWf36bULD7J4j_y4XQHEia4Bgzgha_egJ1JNT4hSPNGVz-CNBtVr9a_YH-dOSjLwo4ydVldoxWJ0gXC2vh_BH-iRzmPC&typo=1">https://linkprotect.cudasvc.com/url?a=https%3a%2f%2fsafedepositsscotland.com&c=E,1,kGwuPL7hX3dVOW07Na0Ru-FZPoJMyQQIHw_hDSJv2It92P--zEPiAYqMV5MbSi2qVlfjiAE3vQlW2iXWmNwncLn7VoBPdmR97-kPAZuL0g,,&typo=1</a></li>
+                        </ul>
+                     </div>
+                  </td>
+               </tr>
+            </table>
+            <div class="pres-content">
+               <h3>
+                  PRESCRIBED INFORMATION TEMPLATE
+               </h3>
+            </div>
+            <div class="form-sec">
+               <h3><img src="{!URLFOR($Resource.PI_Template, 'img/PI-01.png')}" alt=""  /></h3>
+               <div class="form-sec-details">
+                  <table class="form-box">
+                     <tr>
+                        <td align="left" valign="top" class="left-col">
+                           <div class="form-row">
+                              <label>Deposit paid</label>
+                              <div class="input-col">
+                                 <span></span>
+                              </div>
+                           </div>
+                           <div class="form-row">
+                              <label>Property address to which the tenancy relates</label>
+                              <div class="input-col">
+                                 <span></span>
+                              </div>
+                              <div class="input-col">
+                                 <span></span>
+                              </div>
+                           </div>
+                           <div class="form-row">
+                              <label>Town</label>
+                              <div class="input-col">
+                                 <span></span>
+                              </div>
+                           </div>
+                        </td>
+                        <td align="right" valign="top" class="right-col">
+                           <div class="form-row">
+                              <label style="font-size:11.5px">Date deposit received by the landlord  
+                              (or their representative)</label>
+                              <div class="input-col">
+                                 <span></span>
+                              </div>
+                           </div>
+                           <div class="form-row">
+                              <label>Date paid to SDS</label>
+                              <div class="input-col">
+                                 <span></span>
+                              </div>
+                           </div>
+                           <div class="form-row" style="min-height:21px"></div>
+                           <div class="form-row">
+                              <label>Postcode</label>
+                              <div class="input-col">
+                                 <span></span>
+                              </div>
+                           </div>
+                        </td>
+                     </tr>
+                  </table>
+               </div>
+            </div>
+            <div class="form-sec">
+               <h3><img src="{!URLFOR($Resource.PI_Template, 'img/PI-02.png')}" alt=""  /></h3>
+               <div class="form-sec-details">
+                  <table class="form-box">
+                     <tr>
+                        <td align="left" valign="top" class="left-col">
+                           <div class="form-row">
+                              <label>Name</label>
+                              <div class="input-col">
+                                 <span></span>
+                              </div>
+                           </div>
+                        </td>
+                        <td align="right" valign="top" class="right-col">
+                           <div class="form-row">
+                              <label> Landlord Registration Number
+                              </label>
+                              <div class="input-col">
+                                 <span></span>
+                              </div>
+                           </div>
+                        </td>
+                     </tr>
+                  </table>
+               </div>
+            </div>
+            <div class="form-sec">
+               <h3><img src="{!URLFOR($Resource.PI_Template, 'img/PI-03.png')}" alt=""  /></h3>
+               <div class="form-sec-details">
+                  <table class="form-box form-three-col">
+                     <tr>
+                        <td class="first-col"><span style="padding-left:16px;display:inline-block">Name</span></td>
+                        <td class="second-col">Landlord Registration Number</td>
+                     </tr>
+                     <tr>
+                        <td class="first-col">
+                           <div style="display:inline-block;width:100%">
+                              <span style="display:inline-block;vertical-align:top;min-width:4%;padding-top:2px">1</span>
+                              <div class="input-col" style="display:inline-block;vertical-align:top;width:92%">
+                                 <span></span>
+                              </div>
+                           </div>
+                        </td>
+                        <td class="second-col">
+                           <div class="input-col">
+                              <span></span>
+                           </div>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td class="first-col" style="padding-bottom:0">
+                           <div style="display:inline-block;width:100%">
+                              <span style="display:inline-block;vertical-align:top;min-width:4%;padding-top:2px">2</span>
+                              <div class="input-col" style="display:inline-block;vertical-align:top;width:92%">
+                                 <span></span>
+                              </div>
+                           </div>
+                        </td>
+                        <td class="second-col" style="padding-bottom:0">
+                           <div class="input-col">
+                              <span></span>
+                           </div>
+                        </td>
+                     </tr>
+                  </table>
+               </div>
+            </div>
+            <div class="form-sec">
+               <h3><img src="{!URLFOR($Resource.PI_Template, 'img/PI-04.png')}" alt=""  /></h3>
+               <div class="form-sec-details">
+                  <table class="form-box">
+                     <tr>
+                        <td align="left" valign="top" class="left-col">
+                           <div class="form-row">
+                              <label>Name</label>
+                              <div class="input-col">
+                                 <span></span>
+                              </div>
+                           </div>
+                        </td>
+                        <td align="right" valign="top" class="right-col">
+                           <div class="form-row">
+                              <label> Agent Registration Number
+                              </label>
+                              <div class="input-col">
+                                 <span></span>
+                              </div>
+                           </div>
+                        </td>
+                     </tr>
+                  </table>
+               </div>
+            </div>
+            <div class="form-sec">
+               <h3><img src="{!URLFOR($Resource.PI_Template, 'img/PI-05.png')}" alt=""  /></h3>
+               <div class="form-sec-details">
+                  <table class="form-box form-three-col">
+                     <tr>
+                        <td class="first-col"><span style="padding-left:16px;display:inline-block">Name</span></td>
+                        <td class="second-col"></td>
+                     </tr>
+                     <tr>
+                        <td class="first-col">
+                           <div style="display:inline-block;width:100%">
+                              <span style="display:inline-block;vertical-align:top;min-width:4%;padding-top:2px;font-size:11px">1</span>
+                              <div class="input-col" style="display:inline-block;vertical-align:top;width:92%">
+                                 <span></span>
+                              </div>
+                           </div>
+                        </td>
+                        <td class="second-col">
+                           <div style="display:inline-block;width:100%">
+                              <span style="display:inline-block;vertical-align:top;min-width:4%;padding-top:2px;font-size:11px">4</span>
+                              <div class="input-col" style="display:inline-block;vertical-align:top;width:92%">
+                                 <span></span>
+                              </div>
+                           </div>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td class="first-col" style="padding-bottom:0">
+                           <div style="display:inline-block;width:100%">
+                              <span style="display:inline-block;vertical-align:top;min-width:4%;padding-top:2px;font-size:11px">2</span>
+                              <div class="input-col" style="display:inline-block;vertical-align:top;width:92%">
+                                 <span></span>
+                              </div>
+                           </div>
+                        </td>
+                        <td class="second-col" style="padding-bottom:0">
+                           <div style="display:inline-block;width:100%">
+                              <span style="display:inline-block;vertical-align:top;min-width:4%;padding-top:2px;font-size:11px">5</span>
+                              <div class="input-col" style="display:inline-block;vertical-align:top;width:92%">
+                                 <span></span>
+                              </div>
+                           </div>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td class="first-col" style="padding-bottom:0">
+                           <div style="display:inline-block;width:100%">
+                              <span style="display:inline-block;vertical-align:top;min-width:4%;padding-top:2px;font-size:11px">3</span>
+                              <div class="input-col" style="display:inline-block;vertical-align:top;width:92%">
+                                 <span></span>
+                              </div>
+                           </div>
+                        </td>
+                        <td class="second-col" style="padding-bottom:0" align="right">
+                           <div style="display:inline-block;width:100%">
+                              <span style="display:inline-block;vertical-align:top;min-width:4%;padding-top:2px;font-size:11px">6</span>
+                              <div class="input-col" style="display:inline-block;vertical-align:top;width:92%">
+                                 <span></span>
+                              </div>
+                           </div>
+                        </td>
+                     </tr>
+                  </table>
+               </div>
+            </div>
+         </div>
+         <div class="pdf-page pdf-page-2">
+            <div class="page-5-top-row">
+               <h3>
+                  CIRCUMSTANCES WHEN THE DEPOSIT MAY BE RETAINED BY THE LANDLORD
+               </h3>
+               <p>
+                  The circumstances when all or part of the deposit may be retained by the landlord/s by reference to the terms of 
+                  the tenancy are set out in clause(s)    
+               </p>
+               <p class="input-col text-area">
+                  <span>The circumstances when all or part of the deposit may be retained by the landlord/s by reference to the terms of 
+                  the tenancy are set out in clause(s)</span>
+               </p>
+               <p>
+                  of the tenancy agreement. No deduction can be paid from the deposit until the parties to the tenancy agreement 
+                  have agreed the deduction, or an award has been made by SDS or by the court.
+               </p>
+            </div>
+            <div class="confirmation-sec">
+               <div class="confirmation-btm-row">
+                  <p>
+                     <strong>Responsibility for serving complete and correct Prescribed Information on each tenant and relevant person is the 
+                     responsibility of the member and the landlord. Safe Deposits Scotland does not accept any liability for a member’s 
+                     or landlord’s failure to comply with The Tenancy Deposit Scheme (Scotland) Regulations 2011.</strong>
+                  </p>
+                  <p>
+                     <strong>Furthermore it is the responsibility of the landlord to either have applied to be, or is currently entered on the 
+                     register maintained by the local authority under section 82 (registers) of the 2004 Act.</strong>
+                  </p>
+               </div>
+            </div>
+         </div>
+      </body>
+   </html>
+</apex:page>
