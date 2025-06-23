@@ -1,0 +1,17 @@
+List<String> originalList = new List<String>{'a'};
+        Integer size = originalList.size();
+        Integer splitPoint = (size + 1) / 2; // This handles both even and odd cases
+        
+        List<String> firstHalf = new List<String>();
+        List<String> secondHalf = new List<String>();
+        
+        for (Integer i = 0; i < size; i++) {
+            if (i < splitPoint) {
+                firstHalf.add(originalList[i]);
+            } else {
+                secondHalf.add(originalList[i]);
+            }
+        }
+        
+        System.debug('First half: ' + firstHalf);
+        System.debug('Second half: ' + secondHalf);
