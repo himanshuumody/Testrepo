@@ -1,0 +1,2 @@
+Inbound_Report__c where Matched_Colour__c != '' AND 
+                                                  Reason_For_Unallocation__c != 'Refund to customer' AND Status__c != 'Inactive' AND Transfer_office__c = False
