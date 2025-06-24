@@ -1,0 +1,717 @@
+<apex:page controller="EI_NI_Prescribed_information_Controller" standardStylesheets="false" renderAs="pdf"  applyBodyTag="false" applyHtmlTag="false" showHeader="false" >
+     <html>
+        <head>
+            <meta charset="utf-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+            <title>TDS</title>
+            <style>
+                @page {
+                size: A4;
+                @top-right {
+                content: counter(page);
+                font-size: 14px;
+                color: #000;
+                font-weight:bold;
+                font-family: Arial, sans-serif;
+                padding-right:10px
+                }
+                }
+                *{
+                padding:0;
+                margin:0 
+                }
+                body {
+                font-family: Arial, sans-serif;
+                padding:0;
+                margin:0;
+                font-size:12px;
+                line-height:18px 
+                }
+                a{
+                color:#000;
+                text-decoration:none 
+                }
+                h3{
+                font-size:18px 
+                }
+                td,th{
+                word-wrap: break-word;
+                }
+                table tr, table td,.common-form-row{
+                page-break-inside: avoid;
+                }
+                table{
+                -fs-table-paginate: paginate;
+                border-collapse: collapse;
+                border-spacing: 0;
+                border:none;
+                width:100% 
+                }
+                .pdf-page{
+                page-break-before: always;
+                }
+                .pdf-page:first-child {
+                page-break-before: auto;
+                }
+                .header td{
+                width:50%;
+                font-size:11.5px;
+                line-height:16px;
+                }
+                .header td h2{
+                font-size:11.5px;
+                margin-bottom:3px 
+                }
+                .header ul{
+                list-style:none;
+                margin:0 
+                }
+                .header ul li{
+                margin-top:1px;
+                font-size:11.5px 
+                }
+                .header ul li span{
+                display:inline-block;
+                vertical-align:middle;
+                padding-top:5px 
+                }
+                .pres-content{
+                padding-bottom:8px;
+                margin-top:30px;
+                margin-bottom:20px 
+                }
+                .pres-content h3{
+                margin-bottom:10px 
+                }
+                .info-content td{
+                padding-bottom:8px 
+                }
+                .info-content h3{
+                margin-bottom:10px 
+                }
+                .info-left{
+                width:3% 
+                }
+                .info-box{
+                margin-top:20px 
+                }
+                .info-box img{
+                width:100%;
+                }
+                .input-col{
+                padding:2px 0 0 0;
+                border:1px solid #000;
+                width:100%;
+                min-height:18px;
+                background:#f3f6fe;
+                font-size:12px;
+                line-height:15px;
+                margin-bottom:3px;
+                }
+                .input-col span{
+                padding:0 5px;
+                display:block
+                }
+                .form-sec{
+                background:#f1f1f1;
+                }
+                .form-sec h3 img{
+                width: 100%;
+                }
+                .form-sec p{
+                line-height:18px 
+                }
+                .form-sec .left-col{
+                padding-right:15px 
+                }
+                .form-sec .right-col{
+                padding-left:15px 
+                }
+                .form-sec-details{
+                background:#f1f1f1;
+                padding:10px 15px 12px 
+                }
+                .form-box td{
+                text-align:left;
+                width:50%;
+                line-height:18px protectedAmount
+                }
+                .form-box .middle-col{
+                width:4% 
+                }
+                .form-three-col td{
+                width:33.33%;
+                vertical-align:top
+                }
+                .form-three-col .first-col{
+                padding-right:10px 
+                }
+                .form-three-col .second-col{
+                padding-left:10px 
+                }
+                .form-three-col .third-col{
+                padding-left:20px 
+                }
+                .form-three-col td{
+                padding-bottom:4px 
+                }
+                .form-box label{
+                margin-bottom:4px;
+                display:block 
+                }
+                .form-box .form-row{
+                padding-bottom:4px 
+                }
+                .common-form-row{
+                border-bottom:1px solid #b4b4b4;
+                padding:10px 5px 10px 
+                }
+                .gray-border-none{
+                border-bottom:none 
+                }
+                .common-form-row h4{
+                margin-bottom:5px;
+                font-size:15px
+                }
+                .pdf-page-4 h3{
+                font-size:14px 
+                }
+                .page-5-top-row h3{
+                margin-bottom:15px;
+                font-size:14px
+                }
+                .page-5-top-row .retain-col{
+                min-height:16px;
+                border:1px solid #000;
+                width:90px;
+                background:#f3f6fe;
+                margin:0 5px 0;
+                padding:0 5px;
+                display:inline-block;
+                font-size:12px
+                }
+                .page-5-top-row{
+                border-bottom:1px solid #000;
+                padding-bottom:8px 
+                }
+                .confirmation-top-row ul{
+                margin-left:15px
+                }
+                .confirmation-top-row ul li{
+                margin-top:8px
+                }
+                .confirmation-top-row td{
+                width:50%
+                }
+                .confirmation-top-row .confim-left{
+                padding-right:15px
+                }
+                .confirmation-top-row .confim-right{
+                padding-left:15px
+                }
+                .confirmation-sec{
+                margin-top:15px
+                }
+                .confirmation-sec h3{
+                margin-bottom:15px
+                }
+                .confirmation-btm-row .input-col {
+                min-height:40px;
+                font-size:12px;line-height:15px;
+                margin-bottom:8px;
+                width:70%
+                }
+                .confirmation-btm-row{
+                margin-top:20px 
+                }
+                .confirmation-btm-row td{
+                width:50% 
+                }
+                .confirmation-btm-row .left{
+                padding-right:25px 
+                }
+                .confirmation-btm-row .right{
+                padding-right:25px 
+                }
+                .confirmation-btm-row p{
+                line-height:18px;
+                margin-top:20px;
+                padding-top:5px;
+                font-size:12.5px
+                }
+                .confirmation-btm-row label{
+                display:block;
+                margin-bottom:5px;
+                font-weight:bold;
+                font-size:12px
+                }
+            </style>
+        </head>
+        <body>
+            <div class="pdf-page pdf-page-1">
+                <table class="header">
+                    <tr>
+                        <td valign="top"> <img src="{!URLFOR($Resource.PI_Template, 'img/tds-Ni-logo.png')}" alt="" style="width: 250px; height: auto;" /></td>
+                        <td valign="top">
+                            <div style="float:right">
+                                <p>The scheme administrator is:</p>
+                                <h2>TENANCY DEPOSIT SCHEME NORTHERN IRELAND</h2>
+                                <p>Innovation Factory, 385 Springfield Road, Belfast, BT12 7DG</p>
+                                <ul>
+                                    <li><span><img src="{!URLFOR($Resource.PI_Template, 'img/tds-phone-icons.png')}" alt="" style="width: 16px; height: auto;" /></span> 0300 037 3700</li>
+                                    <li><span><img src="{!URLFOR($Resource.PI_Template, 'img/tds-mail-icon.png')}" alt="" style="width: 16px; height: auto;" /></span> <a href="mailto:info@tdsnorthernireland.com">info@tdsnorthernireland.com</a></li>
+                                    <li><span><img src="{!URLFOR($Resource.PI_Template, 'img/tds-globe-icon.png')}" alt="" style="width: 16px; height: auto;" /></span> <a href="tdsnorthernireland.com">tdsnorthernireland.com</a></li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <div class="pres-content">
+                    <h3>
+                        PRESCRIBED INFORMATION TEMPLATE
+                    </h3>
+                </div>
+                <div class="form-sec">
+                    <h3><img src="{!URLFOR($Resource.PI_Template, 'img/PI-01.png')}" alt=""  /></h3>
+                    <div class="form-sec-details">
+                        <table class="form-box">
+                            <tr>
+                                <td align="left" valign="top" class="left-col">
+                                    <div class="form-row">
+                                        <label>Deposit paid</label>
+                                        <div class="input-col">
+                                            <apex:outputText rendered="{!deptObj.RecordType.Name == 'NI Custodial Deposit'}">
+                                                <span> £{!deptObj.Actual_Protected_Amount__c}</span>
+                                            </apex:outputText>
+                                            <apex:outputText rendered="{!deptObj.RecordType.Name == 'NI Insured Deposit'}">
+                                                <span> £{! protectedAmount }</span>
+                                            </apex:outputText>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <label>Property address to which the tenancy relates</label>
+                                        <div class="input-col">
+                                            <span> {!deptObj.Property_Address__c}</span>
+                                        </div>
+                                        <div class="input-col">
+                                            <span></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <label>Town</label>
+                                        <div class="input-col">
+                                            <span>{!deptObj.Tenancy_Town__c}</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td align="right" valign="top" class="right-col">
+                                    <div class="form-row">
+                                        <label style="font-size:11.5px">Date deposit received by the landlord  
+                                            (or their representative)</label>
+                                        <div class="input-col">
+                                            <span>
+                                                <apex:outputText value="{0, date,  dd/MM/yyyy}">
+                                                    <apex:param value="{!deptObj.Date_Deposit_Received__c}" /> </apex:outputText>     
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <label>Date deposit/deposit protection fee  
+                                            paid to TDS</label>
+                                        <div class="input-col">
+                                            <span>
+                                                <apex:outputText value="{0, date,  dd/MM/yyyy}">
+                                                    <apex:param value="{!deptObj.Date_Deposit_Registered_with_TDS__c}" /> </apex:outputText>      
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="form-row" style="min-height:21px"></div>
+                                    <div class="form-row">
+                                        <label>Postcode</label>
+                                        <div class="input-col">
+                                            <span>{!deptObj.Propertypostalcode__c}</span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="form-sec">
+                    <h3><img src="{!URLFOR($Resource.PI_Template, 'img/PI-02.png')}" alt=""  /></h3>
+                    <div class="form-sec-details">
+                        <table class="form-box">
+                            <tr>
+                                <td align="left" valign="top" class="left-col">
+                                    <div class="form-row">
+                                        <label>Name</label>
+                                        <div class="input-col">
+                                            <span>{! primaryLandlord.name }	</span>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <label>Email</label>
+                                        <div class="input-col">
+                                            <span>{!primaryLandlord.email}</span>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <label>Phone number</label>
+                                        <div class="input-col">
+                                            <span>{!primaryLandlord.phone}</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td align="right" valign="top" class="right-col">
+                                    <div class="form-row">
+                                        <label>Address
+                                        </label>
+                                        <div class="input-col">
+                                            <span>{!primaryLandlord.address}</span>
+                                        </div>
+                                        <div class="input-col">
+                                            <span></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <label>Correspondence Address</label>
+                                        <div class="input-col">
+                                            <span>{!primaryLandlord.coAddress}</span>
+                                        </div>
+                                        <div class="input-col">
+                                            <span></span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="form-sec">
+                    <h3><img src="{!URLFOR($Resource.PI_Template, 'img/PI-03.png')}" alt=""  /></h3>
+                    <div class="form-sec-details">
+                        <table class="form-box form-three-col">
+                            <tr>
+                                <td class="first-col"><span style="padding-left:16px;display:inline-block">Name</span></td>
+                                <td class="second-col">Email</td>
+                                <td class="third-col">Phone Number</td>
+                            </tr>
+                             <apex:repeat value="{!jointLandlordList}" var="jointLLRecord">
+                            <tr>
+                                <td class="first-col">
+                                    <div style="display:inline-block;width:100%">
+                                        <span style="display:inline-block;vertical-align:top;min-width:6%;padding-top:2px;;font-size:11px"></span>
+                                        <div class="input-col" style="display:inline-block;vertical-align:top;width:91%">
+                                            <span>{! jointLLRecord.name }</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="second-col">
+                                    <div class="input-col">
+                                        <span>{!jointLLRecord.email}</span>
+                                    </div>
+                                </td>
+                                <td class="third-col">
+                                    <div class="input-col">
+                                        <span>{!jointLLRecord.phone}</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            </apex:repeat>    
+                      <!--      <tr>
+                                <td class="first-col" style="padding-bottom:0">
+                                    <div style="display:inline-block;width:100%">
+                                        <span style="display:inline-block;vertical-align:top;min-width:6%;padding-top:2px;;font-size:11px">2</span>
+                                        <div class="input-col" style="display:inline-block;vertical-align:top;width:91%">
+                                            <span></span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="second-col" style="padding-bottom:0">
+                                    <div class="input-col">
+                                        <span></span>
+                                    </div>
+                                </td>
+                                <td class="third-col" style="padding-bottom:0">
+                                    <div class="input-col">
+                                        <span></span>
+                                    </div>
+                                </td>
+                            </tr> -->
+                        </table>
+                    </div>
+                </div>
+                <div class="form-sec">
+                    <h3><img src="{!URLFOR($Resource.PI_Template, 'img/PI-04.png')}" alt=""  /></h3>
+                    <div class="form-sec-details">
+                        <table class="form-box">
+                            <tr>
+                                <td align="left" valign="top" class="left-col">
+                                    <div class="form-row">
+                                        <label>Name</label>
+                                        <div class="input-col">
+                                            <span>{! agentName }</span>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <label>Email</label>
+                                        <div class="input-col">
+                                            <span>{! agentEmail}</span>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <label>Phone number</label>
+                                        <div class="input-col">
+                                            <span>{!	agentLandline }</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td align="right" valign="top" class="right-col">
+                                    <div class="form-row">
+                                        <label>Address
+                                        </label>
+                                        <div class="input-col">
+                                            <span>{!agentAddress}</span>
+                                        </div>
+                                        <div class="input-col">
+                                            <span></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <label>Town</label>
+                                        <div class="input-col">
+                                           <span>{!agentTown}</span>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <label>Postcode</label>
+                                        <div class="input-col">
+                                            <span>{!agentPostcode}</span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="pdf-page pdf-page-2">
+                <div class="form-sec">
+                    <h3><img src="{!URLFOR($Resource.PI_Template, 'img/PI-05.png')}" alt=""  /></h3>
+                    <div class="form-sec-details">
+                        <apex:repeat value="{!tenantList}" var="tenantRecord">
+                        <div class="common-form-row">
+                            <h4>
+                                Tenant 
+                            </h4>
+                            <table class="form-box">
+                                <tr>
+                                    <td align="left" valign="top" class="left-col">
+                                        <div class="form-row">
+                                            <label>Name</label>
+                                            <div class="input-col">
+                                                <span>{!tenantRecord.name}</span>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <label>Email</label>
+                                            <div class="input-col">
+                                                <span>{!tenantRecord.email}</span>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <label>Phone number</label>
+                                            <div class="input-col">
+                                                <span>{!tenantRecord.otherPhone}</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td align="right" valign="top" class="right-col">
+                                        <div class="form-row">
+                                            <label>Address to be used at the end of the tenancy
+                                            </label>
+                                            <div class="input-col">
+                                                <span>{!tenantRecord.address}</span>
+                                            </div>
+                                            <div class="input-col">
+                                                <span></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <label>Town</label>
+                                            <div class="input-col">
+                                                <span>{!tenantRecord.postCode}</span>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <label>Postcode</label>
+                                            <div class="input-col">
+                                                <span>{!tenantRecord.postCode}</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        </apex:repeat>
+                    </div>
+                </div>
+            </div>
+            <div class="pdf-page pdf-page-3">
+                <div class="form-sec">
+                    <h3><img src="{!URLFOR($Resource.PI_Template, 'img/PI-06.png')}" alt=""  /></h3>
+                    <div class="form-sec-details">
+                        <div class="common-form-row gray-border-none">
+                            <p style="margin-bottom:15px">
+                                If there is a relevant person (i.e., anyone who has arranged to pay the deposit on the tenant’s behalf), as part of the Prescribed Information, please provide the details for them below.
+                            </p>
+                            <apex:repeat value="{!relevantPersonList}" var="relPersonRecord" rendered="{!relPersonSize > 0}">
+                            <table class="form-box">
+                                <tr>
+                                    <td align="left" valign="top" class="left-col">
+                                        <div class="form-row">
+                                            <label>Name</label>
+                                            <div class="input-col">
+                                                <span>{!relPersonRecord.name}</span>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <label>Email</label>
+                                            <div class="input-col">
+                                                <span>{!relPersonRecord.email}</span>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <label>Phone number</label>
+                                            <div class="input-col">
+                                                <span>{!relPersonRecord.otherPhone}</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td align="right" valign="top" class="right-col">
+                                        <div class="form-row">
+                                            <label>Address to be used at the end of the  
+                                                tenancy
+                                            </label>
+                                            <div class="input-col">
+                                                <span>>{!relPersonRecord.address}</span>
+                                            </div>
+                                            <div class="input-col">
+                                                <span></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <label>Town</label>
+                                            <div class="input-col">
+                                                <input type="text"  />
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <label>Postcode</label>
+                                            <div class="input-col">
+                                                <span>{!relPersonRecord.postCode}</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                            </apex:repeat>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pdf-page pdf-page-4">
+                <div class="page-5-top-row">
+                    <h3>
+                        CIRCUMSTANCES WHEN THE DEPOSIT MAY BE RETAINED BY THE LANDLORD
+                    </h3>
+                    <p>
+                        The circumstances when all or part of the deposit may be retained by the landlord/s by reference to the terms of the
+                        tenancy are set out in clause(s) <span class="retain-col"> </span>of the tenancy agreement. No deduction can be paid from the
+                        deposit until the parties to the tenancy agreement have agreed the deduction, or an award has been made by TDS or
+                        by the court.
+                    </p>
+                </div>
+                <div class="confirmation-sec">
+                    <h3>
+                        CONFIRMATION
+                    </h3>
+                    <div class="confirmation-top-row">
+                        <table>
+                            <tr>
+                                <td  class="confim-left" valign="top">
+                                    <p>
+                                        The landlord certifies and confirms that:
+                                    </p>
+                                    <ul>
+                                        <li>the information provided is accurate to the best of my/
+                                            our knowledge and belief and 
+                                        </li>
+                                        <li>I/we have given the tenant the opportunity to sign
+                                            this document by way of confirmation that the
+                                            information is accurate to the best of the tenant’s
+                                            knowledge and belief. 
+                                        </li>
+                                    </ul>
+                                </td>
+                                <td  class="confim-right" valign="top">
+                                    <p>
+                                        The tenant confirms that:
+                                    </p>
+                                    <ul>
+                                        <li>I/we have been given the opportunity to read the
+                                            information provided and
+                                        </li>
+                                        <li>I/we sign this document to confirm that the
+                                            information is accurate to the best of my/our
+                                            knowledge and belief.
+                                        </li>
+                                    </ul>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="confirmation-btm-row">
+                        <table>
+                            <tr>
+                                <td class="left" valign="top">
+                                    <label>Signed by or on behalf of the landlord</label>
+                                    <div class="input-col">
+                                        <span></span>
+                                    </div>
+                                </td>
+                                <td class="right" valign="top">
+                                    <label>Signed by the tenant(s)
+                                    </label>
+                                    <div class="input-col">
+                                        <span></span>
+                                    </div>
+                                    <div class="input-col">
+                                        <span></span>
+                                    </div>
+                                    <div class="input-col">
+                                        <span></span>
+                                    </div>
+                                    <div class="input-col">
+                                        <span></span>
+                                    </div>
+                                    <div class="input-col">
+                                        <span></span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                        <div style="margin-top:30px">
+                            <img src="{!URLFOR($Resource.PI_Template, 'img/PI-Ni.png')}" style="width:100%" alt=""  />
+                        </div>
+                        <p>
+                            <strong>Responsibility for serving complete and correct Prescribed Information on each tenant and relevant person is
+                                the responsibility of the member and the landlord. The Dispute Service Limited does not accept any liability for a
+                                member’s or landlord’s failure to comply with The Tenancy Deposit Schemes Regulations (Northern Ireland) 2012.</strong>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </body>
+    </html>
+</apex:page>
