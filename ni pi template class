@@ -1,0 +1,287 @@
+public without sharing class EI_NI_Prescribed_information_Controller {
+    public Deposit__c deptObj {get; set;}
+    //public Deposit_Allocation__c leadTenant {get; set;}
+    public DetailsWrapper leadTenant {get; set;}
+    public Boolean isLeadTenant {get; set;}
+    //public List<Deposit_Allocation__c> tenantList {get; set;}
+    public List<DetailsWrapper> tenantList {get; set;}
+    public Integer tenantsSize {get; set;}
+    public Integer relPersonSize {get; set;} // Updated code for TGK-1034
+    //public Deposit_Allocation__c relevantPerson {get; set;}
+    public List<DetailsWrapper> relevantPersonList {get; set;} // Updated code for TGK-1034
+    public Boolean isRelevantPerson {get; set;}
+    public Property_Allocation__C property_Allocation {get; set;}
+    public List<Property_Allocation__C> prop_AllocationJointLLList {get; set;}
+    public DetailsWrapper primaryLandlord {get; set;}
+    public List<DetailsWrapper> jointLandlordList {get; set;}
+    public Integer jointLLSize {get; set;}
+    public Boolean isAgentOnBehalf {get; set;}
+    public String agentNameAddress {get; set;}
+    public String agentName {get; set;}
+    public String agentAddress {get; set;}
+    public string agentTown {get; set;}
+    public string agentPostcode {get; set;}
+    public String tenantAddress {get; set;}
+    //public String agentPhone {get; set;}
+    public String agentLandline {get; set;}
+    public String agentEmail {get;set;}
+    //public String piClausesInfo {get; set;}
+    //public String piClauseWording { get; set; }
+    //public String piClauseNumber { get; set; }
+    public String piClausesNumberAccount { get; set; }
+    public String piClausesInfoAccount { get; set; }
+    public String piClausesNumberDeposit { get; set; }
+    public String piClausesInfoDeposit { get; set; }
+    public Boolean piClausesBlankMessage { get; set; }
+    public Decimal protectedAmount { get; set; }
+    public String AddressLine { get; set; }
+    public String strHeader {get;set;}
+    
+    public EI_NI_Prescribed_information_Controller() {
+        try{
+            String encodedId = ApexPages.currentPage().getParameters().get('depoId'); 
+            String recordId= EncodingUtil.base64Decode(encodedId).toString();
+            primaryLandlord = new DetailsWrapper();
+            jointLandlordList = new List<DetailsWrapper>();
+            leadTenant = new DetailsWrapper ();
+            //leadTenant = new Deposit_Allocation__c ();
+            relevantPersonList = new List<DetailsWrapper> (); // Updated code for TGK-1034
+            relPersonSize = 0; // Updated code for TGK-1034
+            tenantList = new List<DetailsWrapper>();
+            jointLLSize = 0;
+            tenantsSize = 0;
+            
+            //system.debug('Id='+recordId );
+            Deposit__c deptObjRec = [select id,Case_Status__c,contact__r.AddressFormula__c,Contact__r.Phone,Contact__r.OtherPhone,
+                                     ChangeOver_CaseStatus__c,name,Customer_Name__c, Date_Deposit_Received__c,
+                                     Date_Paid_to_Landlord__c , Protected_Amount__c,Actual_Protected_Amount__c,
+                                     Property__c,customer__r.Salutation, customer__r.Name ,customer__r.Phone,
+                                     customer__r.PersonEmail,Property_Address__c,Start_Date__c,Rent_Amount__c,
+                                     Deposit_Amount__c,Amount_of_Deposit_Protected_by_TDS__c,Status__c,
+                                     Tenant_Changeover_Status__c,Property_Address_Without_Country__c,Propertypostalcode__c,Tenancy_Town__c, 
+                                     WD_Date_Deposit_Received__c, User_reference_for_the_deposit__c,
+                                     Tenancy_managed_non_managed__c, Name_of_Agent_or_Landlord__c,Tenants_Name__c,RecordType.name,
+                                     Customer__c , Customer__r.RecordType.Name,Customer__r.Email__c, PI_Clause_Number__c, PI_Clause_Wording__c,
+                                     Contact__r.Prescribed_Information_clauses__c, Contact__r.PI_Clause_Wording__c, Customer__r.EI_PIClause__c,
+                                     Customer__r.EI_PIInfomation__c, NI_Deposit_Number__c, Customer__r.AddressFinal__c,Customer__r.BillingPostalCode, Customer__r.PersonMailingPostalCode,
+                                     Customer__r.BillingCity,Customer__r.PersonMailingCity,
+                                     Branch__c, Branch__r.Branch_Name__c, Branch__r.Branch_Final_Adress__c, Branch__r.Alt_telephone_no__c,Branch__r.Town_City__c,Branch__r.Postcode__c,
+                                     Branch__r.General_correspondence_e_mail__c, Date_Deposit_Registered_with_TDS__c from Deposit__c where id=:recordId];
+            if (deptObjRec != null) {
+                deptObj = deptObjRec;
+            }
+           // System.debug('Deposit Obj ' +deptObj);
+            //System.debug('Deposit Obj ' +deptObj.Tenants_Name__c);
+            strHeader = 'attachment; filename='+deptObjRec.NI_Deposit_Number__c+' - PICertificate.pdf';
+            Apexpages.currentPage().getHeaders().put('content-disposition', strHeader);
+            if(deptObj.Customer__r.RecordType.Name == 'NI Agent' || Test.isRunningTest()) {
+                
+                this.isAgentOnBehalf = true; 
+                if(deptObj.Branch__c != null || deptObj.Branch__c != ''){   
+                    this.agentNameAddress = deptObj.Customer__r.Name +', '+deptObj.Branch__r.Branch_Final_Adress__c;
+                    this.agentLandline = deptObj.Branch__r.Alt_telephone_no__c;
+                    this.agentEmail = deptObj.Branch__r.General_correspondence_e_mail__c;
+                    this.agentName = deptObj.Customer__r.Name;
+                    this.agentAddress =deptObj.Branch__r.Branch_Final_Adress__c;
+                    this.agentTown  = deptObj.Branch__r.Town_City__c;
+                    this.agentPostcode = deptObj.Branch__r.Postcode__c;
+                } 
+                if(deptObj.Customer__r.AddressFinal__c != null && deptObj.Branch__c == null){
+                    this.AddressLine = deptObj.Customer__r.AddressFinal__c != null ? deptObj.Customer__r.AddressFinal__c : '';
+                    this.agentNameAddress =  deptObj.Customer__r.Name + ', '+AddressLine;
+                    this.agentLandline = deptObj.Contact__r.OtherPhone != ''? deptObj.Contact__r.OtherPhone : deptObj.Contact__r.Phone;
+                    this.agentEmail = deptObj.Customer__r.Email__c;
+                    this.agentName = deptObj.Customer__r.Name;
+                    this.agentAddress =AddressLine;
+                    this.agentTown  = deptObj.Customer__r.BillingCity !=null ? deptObj.Customer__r.BillingCity : deptObj.Customer__r.PersonMailingCity ;
+                    this.agentPostcode = deptObj.Customer__r.BillingPostalCode!=null ? deptObj.Customer__r.BillingPostalCode : deptObj.Customer__r.PersonMailingPostalCode;
+                }
+                
+                
+                this.agentNameAddress = this.agentNameAddress.replaceAll('<br>', ' ');
+                this.agentNameAddress = this.agentNameAddress.replace('/n', ' ');
+                //this.agentPhone = deptObj.Contact__r.Phone;
+                //this.agentLandline = deptObj.Contact__r.OtherPhone != ''? deptObj.Contact__r.OtherPhone : deptObj.Contact__r.Phone;
+                
+            }
+            
+            //this.piClauseWording = deptObj.Customer__r.EI_PIClause__c != null ? deptObj.Customer__r.EI_PIClause__c : '';
+            //this.piClauseWording = deptObj.PI_Clause_Wording__c != null ? this.piClauseWording + '<br/>' + deptObj.PI_Clause_Wording__c : this.piClauseWording;
+            
+            //this.piClauseNumber = deptObj.Customer__r.EI_PIInfomation__c != null ? deptObj.Customer__r.EI_PIInfomation__c : '';
+            //this.piClauseNumber = deptObj.PI_Clause_Number__c != null ? this.piClauseNumber + '<br/>' + deptObj.PI_Clause_Number__c : this.piClauseNumber;
+            
+            //Insured Amount of deposit protected value
+            if((deptObj.Status__c == 'Registered (not paid)' || deptObj.Status__c == 'Awaiting payment' || deptObj.Status__c == 'Deposit transfer accepted - awaiting funds') && deptObj.RecordType.Name == 'NI Insured Deposit'){
+                this.protectedAmount = 0.00;
+            } else{
+                this.protectedAmount = deptObj.Protected_Amount__c; 
+            }
+            
+            //Myaccout Details
+            this.piClausesInfoAccount = deptObj.Customer__r.EI_PIInfomation__c;
+        	this.piClausesNumberAccount  =  deptObj.Customer__r.EI_PIClause__c;
+             
+            //Deposit Summary Details
+            this.piClausesNumberDeposit = deptObj.PI_Clause_Number__c != null ? deptObj.PI_Clause_Number__c  : '';
+            this.piClausesInfoDeposit =   deptObj.PI_Clause_Wording__c != null ? deptObj.PI_Clause_Wording__c : '';
+            
+                system.debug('line 95'+deptObj.PI_Clause_Wording__c);
+            system.debug('line 96'+deptObj.PI_Clause_Number__c);
+            if(((this.piClausesNumberDeposit != null && this.piClausesNumberDeposit != '') || (this.piClausesInfoDeposit != null && this.piClausesInfoDeposit != '')) || (this.piClausesNumberAccount != null && this.piClausesNumberAccount != '') || (this.piClausesInfoAccount != null && this.piClausesInfoAccount != '') ){
+                this.piClausesBlankMessage = false;
+            } else {
+                this.piClausesBlankMessage = true;
+            }
+            
+            List<Deposit_Allocation__c> deposit_AllocationLeadRec = [select id, Tenant_Name__c , Tenant_Email__c , Contact__r.Phone, Deposit__c, Role__c,
+                                                                     Is_Lead__c, Istenantmoved__c, Contact__c, Deposit_Holder__c, Deposit_Holder__r.Salutation,
+                                                                     Deposit_Holder__r.FirstName, Deposit_Holder__r.LastName, Deposit_Holder__r.Name,
+                                                                     Deposit_Holder__r.PersonEmail,Deposit_Holder__r.Email__c, Deposit_Holder__r.Phone,contact__r.MailingPostalCode,contact__r.MailingCity,
+                                                                     Contact__r.Otherphone,Deposit_Holder__r.Tenant_Details_Not_Viewable__pc,contact__r.Mailing_address_line__c,
+                                                                     contact__r.MobilePhone,contact__r.AddressFormula__c,Deposit_Holder__r.Tenant_Details_Viewable__pc
+                                                                     from Deposit_Allocation__c where Deposit__c=:recordId];
+            if (deposit_AllocationLeadRec.size() > 0) {
+                for(Deposit_Allocation__c dep_allRecord : deposit_AllocationLeadRec){
+                 /*   if(dep_allRecord.Is_Lead__c == true){
+                        leadTenant.name = dep_allRecord.Tenant_Name__c;
+                        leadTenant.address = dep_allRecord.contact__r.AddressFormula__c != null ? dep_allRecord.contact__r.AddressFormula__c : '';
+                        leadTenant.address = leadTenant.address.replaceAll('<br>', ', ');
+                        leadTenant.address = leadTenant.address.replaceAll('/n', ', ');
+                        if (leadTenant.address.length() >= 2) {
+                        leadTenant.address = leadTenant.address.substring(0, leadTenant.address.length() - 2);
+                        }
+                        leadTenant.phone = dep_allRecord.contact__r.Phone ;
+                        leadTenant.otherPhone = dep_allRecord.contact__r.OtherPhone;
+                        leadTenant.email = dep_allRecord.Tenant_Email__c;
+                        this.isLeadTenant = true;
+                    } else */if(dep_allRecord.Role__c == 'Tenant'){
+                        DetailsWrapper tntRecord = new DetailsWrapper();
+                        tntRecord.name = dep_allRecord.Tenant_Name__c;
+                        tntRecord.address = dep_allRecord.contact__r.AddressFormula__c != null ? dep_allRecord.contact__r.AddressFormula__c : '';
+                        tntRecord.address = tntRecord.address.replaceAll('<br>', ', ');
+                        tntRecord.address = tntRecord.address.replaceAll('/n', ', ');
+                        
+                        if (tntRecord.address.length() >= 2) {
+    					tntRecord.address = tntRecord.address.substring(0, tntRecord.address.length() - 2);
+						}
+
+                        tntRecord.phone = dep_allRecord.contact__r.Phone ;
+                        tntRecord.otherPhone = dep_allRecord.contact__r.OtherPhone;
+                        tntRecord.email = dep_allRecord.Tenant_Email__c;
+                        tntRecord.postCode = dep_allRecord.contact__r.MailingPostalCode;
+                        tntRecord.tenantTown = dep_allRecord.contact__r.MailingCity;
+                        
+                        System.debug('Line 118: '+tntRecord);
+                        tenantList.add(tntRecord);
+                        
+                    } else if(dep_allRecord.Role__c == 'Relevant Person'){
+                        DetailsWrapper relevantPerson = new DetailsWrapper(); // Updated code for TGK-1034
+                        relevantPerson.name = dep_allRecord.Tenant_Name__c;
+                        relevantPerson.address = dep_allRecord.contact__r.AddressFormula__c != null ? dep_allRecord.contact__r.AddressFormula__c : '';
+                        relevantPerson.address = relevantPerson.address.replaceAll('<br>', ', ');
+                        relevantPerson.address = relevantPerson.address.replaceAll('/n', ', ');
+                        //relevantPerson.address = relevantPerson.address.substring(0, relevantPerson.address.length() - 2);
+                        relevantPerson.phone = dep_allRecord.contact__r.Phone ;
+                        relevantPerson.otherPhone = dep_allRecord.contact__r.OtherPhone;
+                        relevantPerson.email = dep_allRecord.Tenant_Email__c;
+                        relevantPerson.postCode = dep_allRecord.contact__r.MailingPostalCode;
+                        relevantPerson.tenantTown = dep_allRecord.contact__r.MailingCity;
+                        //relevantPerson = dep_allRecord;
+                        this.isRelevantPerson = true;
+                       relevantPersonList.add(relevantPerson);  // Updated code for TGK-1034
+                    }
+                }
+            }
+            if(tenantList.size() >0 ){
+                tenantsSize = tenantList.size();
+            }
+            if(relevantPersonList.size() >0 ){  // Updated code for TGK-1034
+                relPersonSize = relevantPersonList.size();// Updated code for TGK-1034
+            } // Updated code for TGK-1034
+            
+          //  system.debug('Deposit Allocation: '+leadTenant); 
+            // Property_Allocation__C property_AllocationRec = [select id, Contact__r.AddressFormula__c, Property_Address__c ,Relation_to_Property__c, contact__c,Contact__r.Account.IsPersonAccount ,Contact__r.Account.Name,Contact__r.Salutation, Contact__r.FirstName, Contact__r.LastName, Contact__r.Name, Contact__r.Phone, contact__r.Fax, contact__r.OtherPhone, contact__r.Email, contact__r.Alternative_Email__c,  Property__c from Property_Allocation__C where property__c =:deptObj.Property__c AND Relation_to_Property__c = 'Primary Landlord' LIMIT 1];
+            Property_Allocation__C property_AllocationPrimaryLL = [select id, Contact__r.AddressFormula__c, Property_Address__c, Contact__r.Mailing_address_line__c,
+                                                                   Relation_to_Property__c, contact__c,Contact__r.Account.IsPersonAccount, Contact__r.Account.Record_type_name__c,
+                                                                   Contact__r.Account.Name, Contact__r.Account.EI_PIInfomation__c, Contact__r.Salutation,
+                                                                   Contact__r.FirstName, Contact__r.LastName,contact__r.Correspondence_Address__c,
+                                                                   Contact__r.Name, Contact__r.Phone, contact__r.Fax, contact__r.OtherPhone,Contact__r.Account.Is_Organization__c,
+                                                                   contact__r.Email, contact__r.Alternative_Email__c, Contact__r.Is_Organization__c,
+                                                                   Property__c from Property_Allocation__C WHERE property__c =:deptObj.Property__c 
+                                                                   AND Relation_to_Property__c = 'Primary Landlord' AND Is_Deleted__c = false LIMIT 1];
+            if (property_AllocationPrimaryLL != null || Test.isRunningTest()) {
+                property_Allocation = property_AllocationPrimaryLL;
+            }
+        //    system.debug('Property Allocation: '+property_Allocation);
+          //  system.debug('Property Allocation: Name'+property_Allocation.Contact__r.Name);
+           // this.primaryLandlord.Name = property_Allocation.Contact__r.Name;
+            if(property_AllocationPrimaryLL.Contact__r.Account.Is_Organization__c && property_AllocationPrimaryLL.Contact__r.Account.Record_type_name__c == 'NI Landlord'){
+              this.primaryLandlord.Name = property_Allocation.Contact__r.Account.Name;  
+            }
+            else{
+            this.primaryLandlord.Name = property_Allocation.Contact__r.Name;
+            }
+            this.primaryLandlord.Address = property_Allocation.contact__r.Mailing_address_line__c ;
+            this.primaryLandlord.Address = this.primaryLandlord.Address.replaceAll('<br>', ' ');
+            this.primaryLandlord.Address = this.primaryLandlord.Address.replace('/n', ' ');
+            
+            this.primaryLandlord.Phone = property_Allocation.contact__r.Phone ;
+            this.primaryLandlord.OtherPhone = property_Allocation.contact__r.OtherPhone;
+            this.primaryLandlord.Email = property_Allocation.contact__r.Email;
+            this.primaryLandlord.Fax = property_Allocation.contact__r.Fax;
+            this.primaryLandlord.isCompany = property_Allocation.Contact__r.Is_Organization__c;
+            //this.piClausesInfo = property_Allocation.Contact__r.Account.EI_PIInfomation__c;
+            this.primaryLandlord.coAddress = property_Allocation.contact__r.Correspondence_Address__c;
+            this.primaryLandlord.coAddress = this.primaryLandlord.coAddress != null ? this.primaryLandlord.coAddress : '';
+            this.primaryLandlord.coAddress = this.primaryLandlord.coAddress.replaceAll('<br>', ' ');
+            this.primaryLandlord.coAddress = this.primaryLandlord.coAddress.replace('/n', ' ');
+           // system.debug('Property Allocation: PM '+this.primaryLandlord.Name);
+           // system.debug('Property Allocation: P Co Add '+this.primaryLandlord.coAddress);
+            
+            prop_AllocationJointLLList = [select id, Contact__r.AddressFormula__c, Property_Address__c ,Relation_to_Property__c,
+                                          contact__c,Contact__r.Account.IsPersonAccount, Contact__r.Account.Name,contact__r.Mailing_address_line__c,
+                                          Contact__r.Account.EI_PIInfomation__c, Contact__r.Salutation, Contact__r.FirstName,
+                                          Contact__r.LastName, Contact__r.Name, Contact__r.Phone, contact__r.Fax,
+                                          contact__r.OtherPhone, contact__r.Email, contact__r.Alternative_Email__c,
+                                          Contact__r.Is_Organization__c,contact__r.Correspondence_Address__c, Property__c from
+                                          Property_Allocation__C WHERE property__c =:deptObj.Property__c AND Relation_to_Property__c = 'Joint Landlord'];
+            if (prop_AllocationJointLLList.size() > 0 && prop_AllocationJointLLList != null || Test.isRunningTest()) {
+                for(Property_Allocation__c prJointRec : prop_AllocationJointLLList){
+                    DetailsWrapper jointLLRec = new DetailsWrapper();
+                    jointLLRec.Name = prJointRec.Contact__r.Name;
+                    jointLLRec.Address = prJointRec.contact__r.Mailing_address_line__c ;
+                    jointLLRec.Address = jointLLRec.Address.replaceAll('<br>', ' ');
+                    jointLLRec.Address = jointLLRec.Address.replace('/n', ' ');
+                    jointLLRec.coAddress = prJointRec.contact__r.Correspondence_Address__c;
+                  //  System.debug('co Address: '+jointLLRec.coAddress);
+                   // System.debug('co Address: '+prJointRec.contact__r.Correspondence_Address__c);
+                    jointLLRec.Phone = prJointRec.contact__r.Phone ;
+                    jointLLRec.OtherPhone = prJointRec.contact__r.OtherPhone;
+                    jointLLRec.Email = prJointRec.contact__r.Email;
+                    jointLLRec.Fax = prJointRec.contact__r.Fax;
+                    jointLLRec.isCompany = prJointRec.Contact__r.Is_Organization__c;
+                    jointLandlordList.add(jointLLRec);
+                }
+                jointLLSize = jointLandlordList.size();
+            }
+            
+        } catch (Exception ex){
+         //   System.debug('Error: '+ex.getMessage());
+            ApexPages.addmessage(new ApexPages.message(ApexPages.severity.WARNING,'Error: '+ex.getMessage()));
+        }
+        
+    }
+    public class DetailsWrapper {
+        public String name {get; set;}
+        public String address {get; set;}
+        public String phone {get; set;}
+        public String otherPhone {get; set;}
+        public String email {get; set;}
+        public String fax {get; set;}
+        public String coAddress {get; set;}
+        public Boolean isCompany {get;set;}
+        public String  postCode  {get;set;}
+        public String  tenantTown  {get;set;}
+    }
+}
