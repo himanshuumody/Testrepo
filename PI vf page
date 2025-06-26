@@ -247,7 +247,7 @@
                            <div class="form-row">
                               <label>Town</label>
                               <div class="input-col">
-                                 <span></span>
+                                 <span>{!depositList[0].Property__r.County__c}</span>
                               </div>
                            </div>
                         </td>
@@ -256,14 +256,15 @@
                               <label style="font-size:11.5px">Date deposit received by the landlord  
                               (or their representative)</label>
                               <div class="input-col">
-                                 <span></span>
+                                 <span><apex:outputText value="{0, date,  dd / MM / yyyy}">
+                                      <apex:param value="{!depositList[0].Date_Deposit_Received__c}"  /> </apex:outputText></span>
                               </div>
                            </div>
                            <div class="form-row">
                               <label>Date paid to SDS</label>
                               <div class="input-col">
                                   <span> <apex:outputText value="{0, date,  dd / MM / yyyy}">
-                                      <apex:param value="{!depositList[0].Date_Deposit_Received__c}"  /> </apex:outputText>
+                    <apex:param value="{!depositList[0].Payment_Received_By_Scheme__c}" /> </apex:outputText>
                                   </span>
                               </div>
                            </div>
@@ -271,7 +272,7 @@
                            <div class="form-row">
                               <label>Postcode</label>
                               <div class="input-col">
-                                 <span></span>
+                                 <span>{!depositList[0].Property__r.Postal_Code__c}</span>
                               </div>
                            </div>
                         </td>
@@ -305,7 +306,8 @@
                   </table>
                </div>
             </div>
-            <div class="form-sec">
+             <apex:outputPanel rendered="{!isJointLL}">
+            <div class="form-sec" >
                <h3><img src="{!URLFOR($Resource.PI_Template, 'img/PI-03.png')}" alt=""  /></h3>
                <div class="form-sec-details">
                   <table class="form-box form-three-col">
@@ -329,6 +331,8 @@
                   </table>
                </div>
             </div>
+             </apex:outputPanel>    
+             <apex:outputPanel rendered="{!isAgent}">
             <div class="form-sec">
                <h3><img src="{!URLFOR($Resource.PI_Template, 'img/PI-04.png')}" alt=""  /></h3>
                <div class="form-sec-details">
@@ -355,6 +359,7 @@
                   </table>
                </div>
             </div>
+             </apex:outputPanel>    
             <div class="form-sec">
                <h3><img src="{!URLFOR($Resource.PI_Template, 'img/PI-05.png')}" alt=""  /></h3>
                <div class="form-sec-details">
@@ -401,7 +406,7 @@
                   the tenancy are set out in clause(s)    
                </p>
                <p class="input-col text-area">
-                  <span>	</span>
+                  <span><apex:outputText style="white-space:pre-line;" escape="false" value="{!currentUserPIClause}"></apex:outputText>	</span>
                </p>
                <p>
                   of the tenancy agreement. No deduction can be paid from the deposit until the parties to the tenancy agreement 
