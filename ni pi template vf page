@@ -387,6 +387,7 @@
                         </table>
                     </div>
                 </div>
+                 <apex:outputPanel rendered="{!jointLLSize>0}">
                 <div class="form-sec">
                     <h3><img src="{!URLFOR($Resource.PI_Template, 'img/PI-03.png')}" alt=""  /></h3>
                     <div class="form-sec-details">
@@ -441,6 +442,8 @@
                         </table>
                     </div>
                 </div>
+                </apex:outputPanel>   
+                <apex:outputPanel rendered="{!isAgentOnBehalf}"> 
                 <div class="form-sec">
                     <h3><img src="{!URLFOR($Resource.PI_Template, 'img/PI-04.png')}" alt=""  /></h3>
                     <div class="form-sec-details">
@@ -494,6 +497,7 @@
                         </table>
                     </div>
                 </div>
+                </apex:outputPanel>     
             </div>
             <div class="pdf-page pdf-page-2">
                 <div class="form-sec">
@@ -557,6 +561,7 @@
                     </div>
                 </div>
             </div>
+           <apex:outputPanel rendered="{!relPersonSize>0}"> 
             <div class="pdf-page pdf-page-3">
                 <div class="form-sec">
                     <h3><img src="{!URLFOR($Resource.PI_Template, 'img/PI-06.png')}" alt=""  /></h3>
@@ -620,6 +625,7 @@
                     </div>
                 </div>
             </div>
+               </apex:outputPanel>
             <div class="pdf-page pdf-page-4">
                 <div class="page-5-top-row">
                     <h3>
