@@ -238,7 +238,7 @@
                            <div class="form-row">
                               <label>Property address to which the tenancy relates</label>
                               <div class="input-col">
-                                 <span>{!depositList[0].Property_Address__c}</span>
+                                 <span>{!depositList[0].Property__r.House_No__c};{!depositList[0].Property__r.Street__c}</span>
                               </div>
                               <div class="input-col">
                                  <span></span>
@@ -406,8 +406,11 @@
                   the tenancy are set out in clause(s)    
                </p>
                <p class="input-col text-area">
-                  <span><apex:outputText style="white-space:pre-line;" escape="false" value="{!currentUserPIClause}"></apex:outputText>	</span>
+                  <span><apex:outputText style="white-space:pre-line;" escape="false" value="{!depositList[0].customer__r.EI_PIInfomation__c}"></apex:outputText>	</span>
                </p>
+                <p class="input-col text-area">
+                  <span><apex:outputText style="white-space:pre-line;" escape="false" value="{!depositList[0].EI_PI_Clause_wording__c}"></apex:outputText>	</span>
+               </p> 
                <p>
                   of the tenancy agreement. No deduction can be paid from the deposit until the parties to the tenancy agreement 
                   have agreed the deduction, or an award has been made by SDS or by the court.
