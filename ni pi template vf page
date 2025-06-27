@@ -633,7 +633,16 @@
                     </h3>
                     <p>
                         The circumstances when all or part of the deposit may be retained by the landlord/s by reference to the terms of the
-                        tenancy are set out in clause(s) <span class="retain-col"> </span>of the tenancy agreement. No deduction can be paid from the
+                        tenancy are set out in clause(s) 
+                    </p>
+                    <p class="input-col text-area">
+                  <span><apex:outputText style="white-space:pre-line;" escape="false" value="{!piClausesInfoAccount}"></apex:outputText>	</span>
+                  </p>
+                    <p class="input-col text-area">
+                  <span><apex:outputText style="white-space:pre-line;" escape="false" value="{!piClausesInfoDeposit}"></apex:outputText>	</span>
+                  </p>
+                    <p>
+                        of the tenancy agreement. No deduction can be paid from the
                         deposit until the parties to the tenancy agreement have agreed the deduction, or an award has been made by TDS or
                         by the court.
                     </p>
