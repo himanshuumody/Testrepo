@@ -183,7 +183,7 @@
             margin-bottom:15px
             }
             .confirmation-btm-row{
-            margin-top:120px;
+            margin-top:450px;
             border-top:1px solid #000;
             padding-top:5px
             }
@@ -416,7 +416,7 @@
                   have agreed the deduction, or an award has been made by SDS or by the court.
                </p>
             </div>
-            <div class="confirmation-sec">
+            <div  class="confirmation-sec">
                <div class="confirmation-btm-row">
                   <p>
                      <strong>Responsibility for serving complete and correct Prescribed Information on each tenant and relevant person is the 
